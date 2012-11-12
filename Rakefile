@@ -14,8 +14,8 @@ require 'rake'
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
-  gem.name = "slim-api"
-  gem.homepage = "http://github.com/Ataxo/slim-api"
+  gem.name = "slim-api-ruby"
+  gem.homepage = "http://github.com/Ataxo/slim-api-ruby"
   gem.license = "MIT"
   gem.summary = %Q{Easier access Ataxo Slim Api service}
   gem.description = %Q{Wrapper over REST api of Ataxo - enables you to find, create, update and destroy objects}

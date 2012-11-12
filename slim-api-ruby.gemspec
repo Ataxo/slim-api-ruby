@@ -4,7 +4,7 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = "slim-api"
+  s.name = "slim-api-ruby"
   s.version = "0.0.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
@@ -32,10 +32,11 @@ Gem::Specification.new do |s|
     "lib/slim-api/slim_api.rb",
     "lib/slim-api/slim_array.rb",
     "lib/slim-api/slim_object.rb",
+    "slim-api.gemspec",
     "test/helper.rb",
     "test/test_slim-api.rb"
   ]
-  s.homepage = "http://github.com/Ataxo/slim-api"
+  s.homepage = "http://github.com/Ataxo/slim-api-ruby"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
   s.rubygems_version = "1.8.24"
