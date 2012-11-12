@@ -18,7 +18,13 @@ module SlimApi
     end
 
     def campaign
-      @campaign ||= Campaign.find(contract_id: self[:id])
+      if @campaign
+        @campaign
+      elsif (campaign = Campaign.find(contract_id: self[:id])).size == 1
+        @campaign = campaign.first
+      else
+        nil
+      end
     end
 
     def stats args = {}
