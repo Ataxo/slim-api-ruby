@@ -27,6 +27,14 @@ Setup your config values
 
 ``` ruby
 SlimApi.api_token = "YOUR_TOKEN"
+SlimApi.taxonomy = "YOUR_TAXONOMY"
+
+#optional settings
+SlimApi.version = :v1
+#default is :v1
+
+#url where is slim api located
+SlimApi.url = "http://slimapi.ataxo.com"
 ```
 
 ## Working with Gem
