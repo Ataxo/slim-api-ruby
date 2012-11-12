@@ -18,7 +18,7 @@ module SlimApi
     end
 
     def campaign
-      @campaign ||= Campaign.find(contract_id: sef[:id])
+      @campaign ||= Campaign.find(contract_id: self[:id])
     end
 
     def stats args = {}
