@@ -15,6 +15,14 @@ module SlimApi
         find limit: -1
       end
 
+      def create args = {}
+        request(:post, args)
+      end
+
+      def delete args = {}
+        request(:delete, args)
+      end
+
       def find args = {}
         find_args = SlimApi.find_options.merge(args)
         response = request(:get, find_args)
