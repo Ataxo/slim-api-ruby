@@ -53,8 +53,8 @@ module SlimApi
     @config.merge!(conf)
   end
 
-  def self.api_url object_name
-    "#{@config[:url]}/#{@config[:version]}/#{@config[:taxonomy]}/#{object_name.to_s.pluralize}"
+  def self.api_url object_name, method = nil
+    "#{@config[:url]}/#{@config[:version]}/#{@config[:taxonomy]}/#{object_name.to_s.pluralize}#{ method ? "/#{method}" : ""}"
   end
 
   def self.find_options= opts

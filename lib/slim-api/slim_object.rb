@@ -42,32 +42,31 @@ module SlimApi
         end
       end
 
-      def request verb, params = {}
+      def request verb, params = {}, method = nil
         curl = Curl::Easy.new 
         curl.headers["Api-Token"] = SlimApi.api_token
         curl.verbose = false
         curl.resolve_mode = :ipv4
 
         #set right url dependetnly on verb
-        url = SlimApi.api_url(self::NAME)
+        url = SlimApi.api_url(self::NAME, method)
         case verb
         when :get then
-          curl.url = url+"?#{params.to_query}"
+          curl.url = url+ (params ? "?#{params.to_query}" : "")
         when :post then
           curl.url = url
         when :put then
-          curl.url = url+"/#{params[:id]}"
+          curl.url = url+ (params.is_a?(Hash) && params[:id] ? "/#{params[:id]}" : "")
         when :delete then
-          curl.url = url+"/#{params[:id]}"
+          curl.url = url+ (params.is_a?(Hash) && params[:id] ? "/#{params[:id]}" : "")
         end
 
-        #set body for creation and update
-        if verb == :post || verb == :put
+        #set body for creation and update and delete
+        unless verb == :get
           curl.post_body = Yajl::Encoder.encode(params)
         end
 
         curl.http verb.to_s.upcase
-
         response = Yajl::Parser.parse(curl.body_str)
       end
 
