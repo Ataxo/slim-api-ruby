@@ -45,6 +45,7 @@ module SlimApi
       def request verb, params = {}, method = nil
         curl = Curl::Easy.new 
         curl.headers["Api-Token"] = SlimApi.api_token
+        curl.headers["Content-Type"] = "application/json"
         curl.verbose = false
         curl.resolve_mode = :ipv4
 
