@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "slim-api-ruby"
-  s.version = "0.0.1"
+  s.version = "0.0.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Ondrej Bartas"]
-  s.date = "2012-11-12"
+  s.date = "2012-11-22"
   s.description = "Wrapper over REST api of Ataxo - enables you to find, create, update and destroy objects"
   s.email = "ondrej@bartas.cz"
   s.extra_rdoc_files = [
@@ -23,16 +23,19 @@ Gem::Specification.new do |s|
     "README.markdown",
     "Rakefile",
     "VERSION",
-    "lib/slim-api.rb",
+    "lib/slim-api-ruby.rb",
     "lib/slim-api/objects/campaign.rb",
     "lib/slim-api/objects/category.rb",
     "lib/slim-api/objects/client.rb",
     "lib/slim-api/objects/contract.rb",
+    "lib/slim-api/objects/course.rb",
+    "lib/slim-api/objects/import_campaign_statistics.rb",
+    "lib/slim-api/objects/import_keyword_statistics.rb",
     "lib/slim-api/objects/statistics.rb",
     "lib/slim-api/slim_api.rb",
     "lib/slim-api/slim_array.rb",
     "lib/slim-api/slim_object.rb",
-    "slim-api.gemspec",
+    "slim-api-ruby.gemspec",
     "test/helper.rb",
     "test/test_slim-api.rb"
   ]
