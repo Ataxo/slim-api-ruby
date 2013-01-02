@@ -96,7 +96,11 @@ module SlimApi
             end
             true
           elsif response["error_type"] == "ApiError::BadRequest"
-            @errors = response["message"]
+            if response["errors"].is_a?(Hash)
+              @errors = response["errors"]["_errors"]
+            else
+              @errors = response["message"]
+            end
             false
           else
             raise "#{response["error_type"]} - #{response["message"]}"
