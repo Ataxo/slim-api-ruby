@@ -91,7 +91,9 @@ module SlimApi
           response = self.class.request(:post, self)
           if response["status"] == "ok"
             exists!
-            self.id = response["#{self.class::NAME}"]["id"]
+            if response["created"].is_a?(Hash)
+              self.id = response["created"]["id"]
+            end
             true
           elsif response["error_type"] == "ApiError::BadRequest"
             @errors = response["message"]
