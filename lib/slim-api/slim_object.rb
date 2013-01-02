@@ -43,6 +43,7 @@ module SlimApi
       end
 
       def request verb, params = {}, method = nil
+
         curl = Curl::Easy.new 
         curl.headers["Api-Token"] = SlimApi.api_token
         curl.headers["Content-Type"] = "application/json"
@@ -90,7 +91,7 @@ module SlimApi
           response = self.class.request(:post, self)
           if response["status"] == "ok"
             exists!
-            self[:id] = response["#{self.class::NAME}"]["id"]
+            self.id = response["#{self.class::NAME}"]["id"]
             true
           elsif response["error_type"] == "ApiError::BadRequest"
             @errors = response["message"]
