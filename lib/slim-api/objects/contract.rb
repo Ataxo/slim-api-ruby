@@ -30,6 +30,7 @@ module SlimApi
     def stats args = {}
       Statistics.find(args.merge(campaign_id: self[:id]))
     end
-
+    alias :statistics :stats
+    
   end
 end
