@@ -16,11 +16,24 @@ module SlimApi
       end
 
       def create args = {}
-        request(:post, args)
+        if args.is_a?(Hash)
+          request(:post, args)
+        else
+          request(:post, args, :bulk)
+        end
       end
 
       def delete args = {}
         request(:delete, args)
+      end
+
+      def get id
+        response = request(:get, id)
+        if response["status"] == "ok"
+          new(response["#{self::NAME.to_s}"])
+        else
+          raise "#{response["error_type"]} - #{response["message"]}"
+        end
       end
 
       def find args = {}
@@ -54,7 +67,11 @@ module SlimApi
         url = SlimApi.api_url(self::NAME, method)
         case verb
         when :get then
-          curl.url = url+ (params ? "?#{params.to_query}" : "")
+          if params && params.is_a?(Fixnum)
+            curl.url = url+"/#{params}"
+          else
+            curl.url = url+ (params ? "?#{params.to_query}" : "")
+          end
         when :post then
           curl.url = url
         when :put then
