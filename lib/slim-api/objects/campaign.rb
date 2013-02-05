@@ -15,8 +15,8 @@ module SlimApi
     def client
       if @client
         @client
-      elsif (client = Client.find(id: self[:client_id])).size == 1
-        @client = client.first
+      elsif client = Client.get(self[:client_id])
+        @client = client
       else
         nil
       end
@@ -25,8 +25,8 @@ module SlimApi
     def contract
       if @contract
         @contract
-      elsif (contract = Contract.find(id: self[:id])).size == 1
-        @contract = contract.first
+      elsif contract = Contract.get(self[:id])
+        @contract = contract
       else
         nil
       end

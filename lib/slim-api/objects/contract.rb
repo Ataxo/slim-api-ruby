@@ -10,8 +10,8 @@ module SlimApi
     def client
       if @client
         @client
-      elsif (client = Client.find(id: self[:client_id])).size == 1
-        @client = client.first
+      elsif client = Client.get(self[:client_id])
+        @client = client
       else
         nil
       end
@@ -20,8 +20,8 @@ module SlimApi
     def campaign
       if @campaign
         @campaign
-      elsif (campaign = Campaign.find(contract_id: self[:id])).size == 1
-        @campaign = campaign.first
+      elsif (campaigns = Campaign.find(contract_id: self[:id])).size == 1
+        @campaign = campaigns.first
       else
         nil
       end

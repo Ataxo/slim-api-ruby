@@ -11,6 +11,11 @@ module SlimApi
     end
 
     module ClassMethods
+
+      def errors
+        @errors ||= []
+      end
+
       def all
         find limit: -1
       end
@@ -30,17 +35,19 @@ module SlimApi
       def get id
         response = request(:get, id)
         if response[:status] == "ok"
-          new(response["#{self::NAME.to_s}"])
+          new(response[self::NAME])
         else
-          raise "#{response[:error_type]} - #{response[:message]}"
+          puts "SlimApi - Error Getting #{self::NAME} by id #{id}: #{response[:error_type]} - #{response[:message]}"
+          @errors = ["#{response[:error_type]} - #{response[:message]}"]
+          return nil
         end
       end
 
       def find args = {}
         find_args = SlimApi.find_options.merge(args)
-        response = request(:get, find_args)
+        response = request(:find, find_args)
         if response[:status] == "ok"
-          out = response["#{self::NAME.to_s.pluralize}"].collect{ |arg|
+          out = response[self::NAME.to_s.pluralize.to_sym].collect{ |arg|
             new(arg.symbolize_keys).exists!
           }
           array = SlimArray.new out
@@ -66,13 +73,13 @@ module SlimApi
         #set right url dependetnly on verb
         url = SlimApi.api_url(self::NAME, method)
         case verb
+        when :find then
+          curl.url = url+ (params ? "?#{params.to_query}" : "")
         when :get then
-          if params && params.is_a?(Fixnum)
-            curl.url = url+"/#{params}"
-          elsif params && params.has_key?(:id)
-            curl.url = url+"/#{params[:id]}"
-          else
+          if params && params.is_a?(Hash)
             curl.url = url+ (params ? "?#{params.to_query}" : "")
+          else
+            curl.url = url+"/#{params}"
           end
         when :post then
           curl.url = url
@@ -87,7 +94,7 @@ module SlimApi
           curl.post_body = Yajl::Encoder.encode(params)
         end
 
-        curl.http verb.to_s.upcase
+        curl.http (verb == :find ? :get : verb).to_s.upcase
         response = Yajl::Parser.parse(curl.body_str, symbolize_keys: true)
       end
 
