@@ -25,11 +25,34 @@ Jeweler::Tasks.new do |gem|
 end
 Jeweler::RubygemsDotOrgTasks.new
 
+
+#TESTING
+
 require 'rake/testtask'
-Rake::TestTask.new(:test) do |test|
-  test.libs << 'lib' << 'test'
-  test.pattern = 'test/**/test_*.rb'
-  test.verbose = true
+task :default => :test
+
+Rake::TestTask.new(:test) do |t|
+  t.test_files = FileList['test/functional/**/*_test.rb', 'test/unit/**/*_test.rb','test/integration/**/*_test.rb']
+  t.warning = false
+  t.verbose = false
 end
 
-task :default => :test
+namespace :test do
+  Rake::TestTask.new(:unit) do |t|
+    t.test_files = FileList['test/unit/**/*.rb']
+    t.warning = false
+    t.verbose = false
+  end
+
+  Rake::TestTask.new(:functional) do |t|
+    t.test_files = FileList['test/functional/**/*.rb']
+    t.warning = false
+    t.verbose = false
+  end
+
+  Rake::TestTask.new(:integration) do |t|
+    t.test_files = FileList['test/integration/**/*.rb']
+    t.warning = false
+    t.verbose = false
+  end
+end
