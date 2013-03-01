@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 
 module SlimApi
-  class Client < Hashr
+  class Client
     
     include SlimObject
 

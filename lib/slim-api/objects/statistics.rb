@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 
 module SlimApi
-  class Statistics < Hashr
+  class Statistics
     
     include SlimObject
 

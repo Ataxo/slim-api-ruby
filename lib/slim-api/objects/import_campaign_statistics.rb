@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 
 module SlimApi
-  class ImportCampaignStatistics < Hashr
+  class ImportCampaignStatistics
     
     include SlimObject
 

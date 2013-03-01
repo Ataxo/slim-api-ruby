@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 
 module SlimApi
-  class Contract < Hashr
+  class Contract
     
     include SlimObject
 

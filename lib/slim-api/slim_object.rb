@@ -5,6 +5,13 @@ module SlimApi
 
     def self.included(base)
       base.class_eval do
+        #active model like
+        extend ActiveModel::Naming
+        include ActiveModel::AttributeMethods
+        include ActiveModel::Conversion
+        include ActiveModel::Validations
+
+
         extend ClassMethods
         include InstanceMethods
       end
@@ -101,21 +108,46 @@ module SlimApi
     end 
 
     module InstanceMethods
+
+      def initialize args = {}
+        #set attributes to empty array!
+        @attributes = {}
+
+        input_args = args.symbolize_keys
+
+        if input_args.is_a?(Hash)
+          input_args.each do |key, value|
+            send("#{key}=", value)
+          end
+        end
+
+        return self
+      end
+
+      #persisted part
       def exists!
         @exists = true
         self
       end
 
       def exists?
-        @exists
+        !!@exists
       end
       alias :persisted? :exists?
+
+      def add_errors response
+        response[self.class::NAME][:_errors].each do |err, messages|
+          messages.each do |message|
+            errors.add err, message
+          end
+        end
+      end
 
       def save
         if exists?
           update
         else
-          response = self.class.request(:post, self)
+          response = self.class.request(:post, @attributes)
           if response[:status] == "ok"
             exists!
             if response[self.class::NAME].is_a?(Hash)
@@ -124,9 +156,9 @@ module SlimApi
             true
           elsif response[:error_type] == "ApiError::BadRequest"
             if response[self.class::NAME] && response[self.class::NAME][:_errors]
-              @errors = response[self.class::NAME][:_errors]
+              add_errors response
             else
-              @errors = response[:message]
+              errors.add response[:message]
             end
             false
           else
@@ -136,12 +168,16 @@ module SlimApi
       end
 
       def update
-        response = self.class.request(:put, self)
+        response = self.class.request(:put, @attributes)
         if response[:status] == "ok"
           self.id = response[self.class::NAME][:id]
           true
         elsif response[:error_type] == "ApiError::BadRequest"
-          @errors = response[:message]
+          if response[self.class::NAME] && response[self.class::NAME][:_errors]
+            add_errors response
+          else
+            errors.add response[:message]
+          end
           false
         else
           raise "#{response[:error_type]} - #{response[:message]}"
@@ -150,11 +186,11 @@ module SlimApi
 
       def destroy!
         if exists?
-          response = self.class.request(:delete, self)
+          response = self.class.request(:delete, @attributes)
           if response[:status] == "ok"
             true
           elsif response[:error_type] == "ApiError::BadRequest"
-            @errors = response[:message]
+            errors.add response[:message]
             false
           else
             raise "#{response[:error_type]} - #{response[:message]}"
@@ -167,8 +203,36 @@ module SlimApi
         update
       end
 
-      def errors
-        @errors ||= []
+      def to_json
+        Yajl::Encoder.encode(@attributes)
+      end
+
+      def to_hash
+        @attributes
+      end
+
+      #BACKWARDS COMPATIBILITY FOR USING AS HASH!
+      def [](key, default = nil)
+        if @attributes.has_key?(key)
+          @attributes[key.to_sym] 
+        else
+          nil
+        end
+      end
+
+      def []=(key, value)
+        @attributes[key.to_sym] = value
+      end
+
+      def method_missing(name, *args, &block)
+        case name.to_s[-1, 1]
+        when '?'
+          !!@attributes[name.to_s[0..-2].to_sym]
+        when '='
+          @attributes[name.to_s[0..-2].to_sym] = args.first
+        else
+          @attributes[name]
+        end
       end
 
     end
