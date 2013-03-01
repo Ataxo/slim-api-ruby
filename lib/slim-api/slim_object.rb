@@ -58,7 +58,7 @@ module SlimApi
           array.find_object = self
           array
         else
-          raise "#{response["error_type"]} - #{response["message"]}"
+          raise "#{response[:error_type]} - #{response[:message]}"
         end
       end
 
@@ -109,6 +109,7 @@ module SlimApi
       def exists?
         @exists
       end
+      alias :persisted? :exists?
 
       def save
         if exists?
@@ -144,6 +145,20 @@ module SlimApi
           false
         else
           raise "#{response[:error_type]} - #{response[:message]}"
+        end
+      end
+
+      def destroy!
+        if exists?
+          response = self.class.request(:delete, self)
+          if response[:status] == "ok"
+            true
+          elsif response[:error_type] == "ApiError::BadRequest"
+            @errors = response[:message]
+            false
+          else
+            raise "#{response[:error_type]} - #{response[:message]}"
+          end
         end
       end
 
