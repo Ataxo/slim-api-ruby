@@ -44,9 +44,13 @@ module SlimApi
         if response[:status] == "ok"
           new(response[self::NAME])
         else
-          puts "SlimApi - Error Getting #{self::NAME} by id #{id}: #{response[:error_type]} - #{response[:message]}"
-          @errors = ["#{response[:error_type]} - #{response[:message]}"]
-          return nil
+          if SlimApi.not_found_handling == :nil
+            puts "SlimApi - Error Getting #{self::NAME} by id #{id}: #{response[:error_type]} - #{response[:message]}".red
+            @errors = ["#{response[:error_type]} - #{response[:message]}"]
+            return nil
+          else
+            raise "Slim#{response[:error_type]}".constantize, response[:message]
+          end
         end
       end
 

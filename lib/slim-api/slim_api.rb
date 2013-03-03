@@ -7,6 +7,10 @@ module SlimApi
     version: :v1,
     taxonomy: :sandbox,
     api_token: "SlimApi.api_token = 'YOUR TOKEN'",
+    #exception handling
+    # :nil  - return only nil when not found
+    # :exception - return NotFoundException
+    not_found_handling: :nil, 
   }
   @find_options = {
     limit: 10, 
@@ -19,6 +23,14 @@ module SlimApi
 
   def self.url
     @config[:url]
+  end
+
+  def self.not_found_handling
+    @config[:not_found_handling]
+  end
+
+  def self.not_found_handling= type
+    @config[:not_found_handling] = type
   end
 
   def self.version= version

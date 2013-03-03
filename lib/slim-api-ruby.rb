@@ -8,6 +8,7 @@ require 'hashr'
 require 'curb'
 require 'yajl'
 
+require File.join(File.dirname(__FILE__),"slim-api/slim_api_error")
 require File.join(File.dirname(__FILE__),"slim-api/slim_api")
 require File.join(File.dirname(__FILE__),"slim-api/slim_array")
 require File.join(File.dirname(__FILE__),"slim-api/slim_object")

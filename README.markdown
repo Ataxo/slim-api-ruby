@@ -35,6 +35,12 @@ SlimApi.version = :v1
 
 #url where is slim api located
 SlimApi.url = "http://slimapi.ataxo.com"
+
+# (default) When asked for not found object by id
+# this will return nil:
+SlimApi.not_found_handling = :nil
+# this will raise exception SlimApiError::NotFound
+SlimApi.not_found_handling = :exception
 ```
 
 ## Working with Gem
