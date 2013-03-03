@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "slim-api-ruby"
-  s.version = "0.0.3"
+  s.version = "0.1.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Ondrej Bartas"]
-  s.date = "2013-01-30"
+  s.date = "2013-03-03"
   s.description = "Wrapper over REST api of Ataxo - enables you to find, create, update and destroy objects"
   s.email = "ondrej@bartas.cz"
   s.extra_rdoc_files = [
@@ -34,11 +34,15 @@ Gem::Specification.new do |s|
     "lib/slim-api/objects/statistics.rb",
     "lib/slim-api/objects/user.rb",
     "lib/slim-api/slim_api.rb",
+    "lib/slim-api/slim_api_error.rb",
     "lib/slim-api/slim_array.rb",
     "lib/slim-api/slim_object.rb",
+    "lib/slim-api/slim_query.rb",
     "slim-api-ruby.gemspec",
-    "test/helper.rb",
-    "test/test_slim-api.rb"
+    "test/test_helper.rb",
+    "test/unit/active_model_integration_test.rb",
+    "test/unit/client_test.rb",
+    "test/unit/slim_query_test.rb"
   ]
   s.homepage = "http://github.com/Ataxo/slim-api-ruby"
   s.licenses = ["MIT"]
@@ -54,23 +58,44 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<yajl-ruby>, [">= 0"])
       s.add_runtime_dependency(%q<hashr>, [">= 0"])
       s.add_runtime_dependency(%q<activesupport>, [">= 0"])
+      s.add_runtime_dependency(%q<activemodel>, [">= 0"])
+      s.add_runtime_dependency(%q<colorize>, [">= 0"])
       s.add_development_dependency(%q<bundler>, [">= 0"])
+      s.add_development_dependency(%q<turn>, [">= 0"])
       s.add_development_dependency(%q<jeweler>, [">= 0"])
+      s.add_development_dependency(%q<minitest>, [">= 0"])
+      s.add_development_dependency(%q<ansi>, [">= 0"])
+      s.add_development_dependency(%q<simplecov>, [">= 0"])
+      s.add_development_dependency(%q<shoulda-context>, [">= 0"])
     else
       s.add_dependency(%q<curb>, [">= 0"])
       s.add_dependency(%q<yajl-ruby>, [">= 0"])
       s.add_dependency(%q<hashr>, [">= 0"])
       s.add_dependency(%q<activesupport>, [">= 0"])
+      s.add_dependency(%q<activemodel>, [">= 0"])
+      s.add_dependency(%q<colorize>, [">= 0"])
       s.add_dependency(%q<bundler>, [">= 0"])
+      s.add_dependency(%q<turn>, [">= 0"])
       s.add_dependency(%q<jeweler>, [">= 0"])
+      s.add_dependency(%q<minitest>, [">= 0"])
+      s.add_dependency(%q<ansi>, [">= 0"])
+      s.add_dependency(%q<simplecov>, [">= 0"])
+      s.add_dependency(%q<shoulda-context>, [">= 0"])
     end
   else
     s.add_dependency(%q<curb>, [">= 0"])
     s.add_dependency(%q<yajl-ruby>, [">= 0"])
     s.add_dependency(%q<hashr>, [">= 0"])
     s.add_dependency(%q<activesupport>, [">= 0"])
+    s.add_dependency(%q<activemodel>, [">= 0"])
+    s.add_dependency(%q<colorize>, [">= 0"])
     s.add_dependency(%q<bundler>, [">= 0"])
+    s.add_dependency(%q<turn>, [">= 0"])
     s.add_dependency(%q<jeweler>, [">= 0"])
+    s.add_dependency(%q<minitest>, [">= 0"])
+    s.add_dependency(%q<ansi>, [">= 0"])
+    s.add_dependency(%q<simplecov>, [">= 0"])
+    s.add_dependency(%q<shoulda-context>, [">= 0"])
   end
 end
 
