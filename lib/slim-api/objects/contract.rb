@@ -6,6 +6,7 @@ module SlimApi
     include SlimObject
 
     NAME = :contract
+    PRIMARY_KEY = :id
 
     def client
       if @client
@@ -20,15 +21,15 @@ module SlimApi
     def campaign
       if @campaign
         @campaign
-      elsif (campaigns = Campaign.find(contract_id: self[:id])).size == 1
-        @campaign = campaigns.first
+      elsif campaign = Campaign.get(contract_id: self[:id])
+        @campaign = campaign
       else
         nil
       end
     end
 
-    def stats args = {}
-      Statistics.find(args.merge(campaign_id: self[:id]))
+    def stats
+      Statistics.where(campaign_id: self.id)
     end
     alias :statistics :stats
     

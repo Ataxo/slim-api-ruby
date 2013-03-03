@@ -6,6 +6,7 @@ module SlimApi
     include SlimObject
 
     NAME = :course
+    PRIMARY_KEY = :date
 
   end
 end

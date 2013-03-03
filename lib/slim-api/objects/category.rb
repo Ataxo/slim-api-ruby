@@ -6,6 +6,7 @@ module SlimApi
     include SlimObject
 
     NAME = :category
+    PRIMARY_KEY = :id
 
   end
 end

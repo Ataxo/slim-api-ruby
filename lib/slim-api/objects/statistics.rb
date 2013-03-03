@@ -6,6 +6,7 @@ module SlimApi
     include SlimObject
 
     NAME = :statistics
+    PRIMARY_KEY = :campaign_id
 
     def cpc
       return 0.0 if self.clicks.to_f == 0

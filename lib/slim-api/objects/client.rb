@@ -6,6 +6,7 @@ module SlimApi
     include SlimObject
 
     NAME = :client
+    PRIMARY_KEY = :id
 
     def contracts
       @contracts ||= Contract.find(client_id: self[:id])

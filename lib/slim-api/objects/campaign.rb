@@ -6,9 +6,10 @@ module SlimApi
     include SlimObject
 
     NAME = :campaign
+    PRIMARY_KEY = :id
 
-    def stats args = {}
-      Statistics.find(args.merge(campaign_id: self[:id]))
+    def stats
+      Statistics.where(campaign_id: self.id)
     end
     alias :statistics :stats
 

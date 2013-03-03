@@ -6,6 +6,7 @@ module SlimApi
     include SlimObject
 
     NAME = :user
+    PRIMARY_KEY = :id
 
   end
 end

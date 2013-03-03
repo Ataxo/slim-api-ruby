@@ -19,8 +19,15 @@ module SlimApi
 
     module ClassMethods
 
+      delegate :order, :limit, :offset,
+             :where, :includes, :to => :query
+
       def errors
         @errors ||= []
+      end
+
+      def query
+        @query ||= SlimQuery.new(self)
       end
 
       def all
@@ -55,21 +62,31 @@ module SlimApi
       end
 
       def find args = {}
-        find_args = SlimApi.find_options.merge(args)
-        response = request(:find, find_args)
-        if response[:status] == "ok"
-          out = response[self::NAME.to_s.pluralize.to_sym].collect{ |arg|
-            new(arg.symbolize_keys).exists!
-          }
-          array = SlimArray.new out
-          array.find_options = find_args
-          array.total_count = response[:total_count]
-          array.limit = find_args[:limit]
-          array.offset = find_args[:offset]
-          array.find_object = self
-          array
+        #where || ids list
+        if args.is_a?(Hash) || args.is_a?(Array)
+          if args.is_a?(Hash)
+            find_args = SlimApi.find_options.merge(args)
+          else
+            find_args = SlimApi.find_options.merge("#{self::PRIMARY_KEY}.in" => args.join(","), :limit => args.size)
+          end
+          response = request(:find, find_args)
+          if response[:status] == "ok"
+            out = response[self::NAME.to_s.pluralize.to_sym].collect{ |arg|
+              new(arg.symbolize_keys).exists!
+            }
+            array = SlimArray.new out
+            array.find_options = find_args
+            array.total_count = response[:total_count]
+            array.limit = find_args[:limit]
+            array.offset = find_args[:offset]
+            array.find_object = self
+            array
+          else
+            raise "#{response[:error_type]} - #{response[:message]}"
+          end
+        #only id
         else
-          raise "#{response[:error_type]} - #{response[:message]}"
+          get args
         end
       end
 
@@ -99,7 +116,6 @@ module SlimApi
         when :delete then
           curl.url = url+ (params.is_a?(Hash) && params[:id] ? "/#{params[:id]}" : "")
         end
-
         #set body for creation and update and delete
         unless verb == :get
           curl.post_body = Yajl::Encoder.encode(params)
