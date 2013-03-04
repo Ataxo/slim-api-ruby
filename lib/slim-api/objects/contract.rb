@@ -33,5 +33,13 @@ module SlimApi
     end
     alias :statistics :stats
     
+    def payments
+      Payment.where(campaign_id: self.id)
+    end
+
+    def relations
+      Relation.where(campaign_id: self.id)
+    end
+
   end
 end

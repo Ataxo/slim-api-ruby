@@ -8,11 +8,6 @@ module SlimApi
     NAME = :campaign
     PRIMARY_KEY = :id
 
-    def stats
-      Statistics.where(campaign_id: self.id)
-    end
-    alias :statistics :stats
-
     def client
       if @client
         @client
@@ -33,6 +28,19 @@ module SlimApi
       end
     end
 
+
+    def stats
+      Statistics.where(campaign_id: self.id)
+    end
+    alias :statistics :stats
+
+    def payments
+      Payment.where(campaign_id: self.id)
+    end
+
+    def relations
+      Relation.where(campaign_id: self.id)
+    end
 
   end
 end
