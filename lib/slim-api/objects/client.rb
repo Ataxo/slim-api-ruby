@@ -9,11 +9,11 @@ module SlimApi
     PRIMARY_KEY = :id
 
     def contracts
-      @contracts ||= Contract.find(client_id: self[:id])
+      @contracts ||= Contract.where(client_id: self[:id])
     end
 
     def campaigns
-      @campaigns ||= Campagin.find(client_id: self[:id])
+      @campaigns ||= Campagin.where(client_id: self[:id])
     end
   end
 end
