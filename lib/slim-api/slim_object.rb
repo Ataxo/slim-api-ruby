@@ -49,7 +49,7 @@ module SlimApi
       def get id
         response = request(:get, id)
         if response[:status] == "ok"
-          new(response[self::NAME])
+          new(response[self::NAME]).exists!
         else
           if SlimApi.not_found_handling == :nil
             puts "SlimApi - Error Getting #{self::NAME} by id #{id}: #{response[:error_type]} - #{response[:message]}".red
