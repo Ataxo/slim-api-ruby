@@ -15,5 +15,13 @@ module SlimApi
     def campaigns
       @campaigns ||= Campagin.where(client_id: self[:id])
     end
+
+    def self.find_by_access_hash access_hash
+      if (out = find(:access_hash => access_hash)).size == 1
+        out.first
+      else
+        nil
+      end
+    end
   end
 end
