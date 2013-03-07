@@ -92,7 +92,7 @@ module SlimApi
 
       def request verb, params = {}, method = nil
 
-        curl = Curl::Easy.new 
+        curl = Curl::Easy.new
         curl.headers["Api-Token"] = SlimApi.api_token
         curl.headers["Content-Type"] = "application/json"
         curl.verbose = false
@@ -125,7 +125,7 @@ module SlimApi
         response = Yajl::Parser.parse(curl.body_str, symbolize_keys: true)
       end
 
-    end 
+    end
 
     module InstanceMethods
 
@@ -234,7 +234,7 @@ module SlimApi
       #BACKWARDS COMPATIBILITY FOR USING AS HASH!
       def [](key, default = nil)
         if @attributes.has_key?(key)
-          @attributes[key.to_sym] 
+          @attributes[key.to_sym]
         else
           nil
         end

@@ -2,7 +2,7 @@
 
 module SlimApi
   class Contract
-    
+
     include SlimObject
 
     NAME = :contract
@@ -11,7 +11,7 @@ module SlimApi
     def client
       if @client
         @client
-      elsif client = Client.get(self[:client_id])
+      elsif client = Client.find(self[:client_id])
         @client = client
       else
         nil
@@ -21,7 +21,7 @@ module SlimApi
     def campaign
       if @campaign
         @campaign
-      elsif campaign = Campaign.get(contract_id: self[:id])
+      elsif campaign = Campaign.find(self[:id])
         @campaign = campaign
       else
         nil
@@ -32,7 +32,7 @@ module SlimApi
       Statistics.where(campaign_id: self.id)
     end
     alias :statistics :stats
-    
+
     def payments
       Payment.where(campaign_id: self.id)
     end
