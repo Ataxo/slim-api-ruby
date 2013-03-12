@@ -123,6 +123,8 @@ module SlimApi
 
         curl.http (verb == :find ? :get : verb).to_s.upcase
         response = Yajl::Parser.parse(curl.body_str, symbolize_keys: true)
+        SlimApi.log("#{"-"*80}\nHeader: #{curl.headers}\nRequest: #{verb}\nURL: #{curl.url}\n#{Yajl::Encoder.encode(response, :pretty => true, :indent => "  ")}")
+        response
       end
 
     end

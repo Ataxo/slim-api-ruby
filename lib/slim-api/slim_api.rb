@@ -10,12 +10,28 @@ module SlimApi
     #exception handling
     # :nil  - return only nil when not found
     # :exception - return NotFoundException
-    not_found_handling: :nil, 
+    not_found_handling: :nil,
   }
   @find_options = {
-    limit: 10, 
+    limit: 10,
     offset: 0
   }
+
+  @logger = nil
+
+  def self.logger= logger
+    @logger = logger
+  end
+
+  def self.logger
+    @logger
+  end
+
+  def self.log text
+    if @logger
+      @logger.info text
+    end
+  end
 
   def self.url= url
     @config[:url] = url

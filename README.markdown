@@ -43,6 +43,35 @@ SlimApi.not_found_handling = :nil
 SlimApi.not_found_handling = :exception
 ```
 
+## Logging
+
+When you need to log requests use:
+``` ruby
+SlimApi.logger = Logger.new(STDOUT)
+#or
+SlimApi.logger = Logger.new("slimapi.log")
+```
+this will return you:
+```
+--------------------------------------------------------------------------------
+Header: {"Api-Token"=>"YOUR TOKEN", "Content-Type"=>"application/json"}
+Request: find
+URL: http://slimapi.ataxo.com/v1/sandbox/objects
+{
+  "status": "ok",
+  "code": 200,
+  "message": "ok",
+  "executed_at": "2013-03-12 11:31:21",
+  "executed_in": "0.017648806s",
+  "objects": [
+    {
+      ......
+    }
+  ],
+  "total_count": 1
+}
+```
+
 ## Working with Gem
 
 You can access Main classes: Client, Contract, Campaign, Statistics, Category
@@ -98,7 +127,7 @@ ActiveRecord like query interface.
 
 Supported methods:
 - where (conditions)
-- order 
+- order
 - limit
 - offset
 - includes (include fields - statistics, payments)
@@ -146,8 +175,8 @@ SlimApi::Statistics.where(:campaign_id => 1234).where(:'date.from' => Date.today
     .includes('currency').includes('partner_id').includes('date').order('date desc')
 ```
 
-### Order 
- 
+### Order
+
 You can order you find requests:
 
 ```ruby
@@ -170,7 +199,7 @@ SlimApi.find_options
 #=> { limit: 10, offset: 0 }
 # and you can setup it by:
 SlimApi.find_options = { limit: 20, offset: 0 }
-#this is default configuration for all find methods, 
+#this is default configuration for all find methods,
 #but you can easily overwrite for one call it by adding limit/offset to find method:
 SlimApi::Client.find limit: 15
 
