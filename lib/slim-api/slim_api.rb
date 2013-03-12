@@ -11,6 +11,8 @@ module SlimApi
     # :nil  - return only nil when not found
     # :exception - return NotFoundException
     not_found_handling: :nil,
+    #webmock
+    webmock: false
   }
   @find_options = {
     limit: 10,
@@ -27,9 +29,21 @@ module SlimApi
     @logger
   end
 
-  def self.log text
+  def self.webmock= webmock
+    @config[:webmock] = webmock
+  end
+
+  def self.webmock
+    @config[:webmock]
+  end
+
+  def self.log request
     if @logger
-      @logger.info text
+      if @config[:webmock]
+        @logger.info "stub_request(:#{request[:verb]}, '#{request[:url]}').with(:headers => #{request[:header]}).to_return(:status => 200, :body => %Q{#{request[:response]}}, :headers => {})"
+      else
+        @logger.info "#{"-"*80}\nHeader: #{request[:header]}\nRequest: #{request[:verb]}\nURL: #{request[:url]}\n#{request[:response]}"
+      end
     end
   end
 
