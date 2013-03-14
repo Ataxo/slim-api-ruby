@@ -134,6 +134,7 @@ module SlimApi
     module InstanceMethods
       INCLUDE_REGEXP = /^_/
       VARIABLE_REGEXP = /^@_/
+      LOADED_VARIABLE_REGEXP = /^@_(.+)_loaded$/
       def initialize args = {}
         #set attributes to empty array!
         @attributes = {}
@@ -153,7 +154,7 @@ module SlimApi
       def sub_model_exists!
         @exists = true
         self.instance_variables.each do |arg|
-          if arg.to_s =~ VARIABLE_REGEXP
+          if arg.to_s =~ VARIABLE_REGEXP && arg.to_s !~ LOADED_VARIABLE_REGEXP
             obj = self.instance_variable_get(arg)
             if obj.is_a?(Array)
               obj.each{|o| o.sub_model_exists! }
@@ -264,8 +265,10 @@ module SlimApi
                 array.limit = value.size
                 array.offset = 0
                 array.find_object = sub_klass
+                instance_variable_set("@#{key}_loaded", true)
                 instance_variable_set("@#{key}", array)
               else
+                instance_variable_set("@#{key}_loaded", true)
                 instance_variable_set("@#{key}", sub_klass.new(value))
               end
             else

@@ -9,7 +9,7 @@ module SlimApi
     PRIMARY_KEY = :id
 
     belongs_to :client,   :client_id
-    belongs_to :contract, :id
+    belongs_to :campaign, :id
     belongs_to :category, :category_id
     belongs_to :user,     :admin_id
 
