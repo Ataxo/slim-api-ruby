@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "slim-api-ruby"
-  s.version = "0.1.2"
+  s.version = "0.1.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Ondrej Bartas"]
@@ -40,6 +40,7 @@ Gem::Specification.new do |s|
     "lib/slim-api/slim_array.rb",
     "lib/slim-api/slim_object.rb",
     "lib/slim-api/slim_query.rb",
+    "lib/slim-api/slim_relations.rb",
     "slim-api-ruby.gemspec",
     "test/test_helper.rb",
     "test/unit/active_model_integration_test.rb",
