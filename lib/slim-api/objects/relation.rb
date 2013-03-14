@@ -8,12 +8,8 @@ module SlimApi
     NAME = :relation
     PRIMARY_KEY = :id
 
-    def contract
-      @_contract ||= Contract.find(self[:campaign_id])
-    end
+    has_many :contracts, :campaign_id
+    has_many :campaigns, :campaign_id
 
-    def campaign
-      @_campaign ||= Campagin.find(self[:campaign_id])
-    end
   end
 end

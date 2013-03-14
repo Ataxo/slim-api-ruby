@@ -175,6 +175,19 @@ class ClientTest < Test::Unit::TestCase
 
           assert_not_nil client.contracts.first.id
         end
+
+        should "have defined belongs_to relation" do
+          assert SlimApi::Contract.instance_methods.include?(:category)
+          contract = SlimApi::Contract.find(@contract.id)
+          assert_equal contract.category.category, "Test"
+        end
+
+        should "have defined has_many relation" do
+          assert SlimApi::Contract.instance_methods.include?(:statistics)
+          contracts = SlimApi::Client.find(@client.id).contracts
+          assert contracts.is_a?(SlimApi::SlimQuery)
+          assert_equal contracts.to_a.size, 1
+        end
       end
     end
 

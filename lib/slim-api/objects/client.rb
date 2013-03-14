@@ -8,13 +8,8 @@ module SlimApi
     NAME = :client
     PRIMARY_KEY = :id
 
-    def contracts
-      @_contracts ||= Contract.where(client_id: self[:id])
-    end
-
-    def campaigns
-      @_campaigns ||= Campagin.where(client_id: self[:id])
-    end
+    has_many :contracts, :client_id
+    has_many :campaigns, :client_id
 
     def self.find_by_access_hash access_hash
       if (out = find(:access_hash => access_hash)).size == 1

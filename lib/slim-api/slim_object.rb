@@ -11,6 +11,8 @@ module SlimApi
         include ActiveModel::Conversion
         include ActiveModel::Validations
 
+        #relations has_many, belongs_to
+        extend SlimApi::SlimRelations
 
         extend ClassMethods
         include InstanceMethods

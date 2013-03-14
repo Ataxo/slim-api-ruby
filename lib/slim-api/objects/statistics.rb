@@ -1,12 +1,20 @@
 # -*- encoding : utf-8 -*-
 
+# #FIX inflections!
+# ActiveSupport::Inflector.inflections do |inflect|
+#   inflect.uncountable "statistics"
+# end
+
 module SlimApi
   class Statistics
-    
+
     include SlimObject
 
     NAME = :statistics
     PRIMARY_KEY = :campaign_id
+
+    belongs_to :campaign, :campaign_id
+    belongs_to :contract, :campaign_id
 
     def cpc
       return 0.0 if self.clicks.to_f == 0

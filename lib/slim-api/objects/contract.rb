@@ -8,38 +8,15 @@ module SlimApi
     NAME = :contract
     PRIMARY_KEY = :id
 
-    def client
-      if @_client
-        @_client
-      elsif client = Client.find(self[:client_id])
-        @_client = client
-      else
-        nil
-      end
-    end
+    belongs_to :client,   :client_id
+    belongs_to :contract, :id
+    belongs_to :category, :category_id
+    belongs_to :user,     :admin_id
 
-    def campaign
-      if @_campaign
-        @_campaign
-      elsif campaign = Campaign.find(self[:id])
-        @_campaign = campaign
-      else
-        nil
-      end
-    end
-
-    def stats
-      Statistics.where(campaign_id: self.id)
-    end
-    alias :statistics :stats
-
-    def payments
-      Payment.where(campaign_id: self.id)
-    end
-
-    def relations
-      Relation.where(campaign_id: self.id)
-    end
+    has_many :statistics, :campaign_id
+    alias :stats :statistics
+    has_many :payments,   :campaign_id
+    has_many :relations,  :campaign_id
 
   end
 end
