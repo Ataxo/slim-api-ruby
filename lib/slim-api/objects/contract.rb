@@ -9,20 +9,20 @@ module SlimApi
     PRIMARY_KEY = :id
 
     def client
-      if @client
-        @client
+      if @_client
+        @_client
       elsif client = Client.find(self[:client_id])
-        @client = client
+        @_client = client
       else
         nil
       end
     end
 
     def campaign
-      if @campaign
-        @campaign
+      if @_campaign
+        @_campaign
       elsif campaign = Campaign.find(self[:id])
-        @campaign = campaign
+        @_campaign = campaign
       else
         nil
       end

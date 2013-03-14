@@ -49,7 +49,7 @@ module SlimApi
       def get id
         response = request(:get, id)
         if response[:status] == "ok"
-          new(response[self::NAME]).exists!
+          new(response[self::NAME]).sub_model_exists!
         else
           if SlimApi.not_found_handling == :nil
             puts "SlimApi - Error Getting #{self::NAME} by id #{id}: #{response[:error_type]} - #{response[:message]}".red
@@ -72,7 +72,7 @@ module SlimApi
           response = request(:find, find_args)
           if response[:status] == "ok"
             out = response[self::NAME.to_s.pluralize.to_sym].collect{ |arg|
-              new(arg.symbolize_keys).exists!
+              new(arg.symbolize_keys).sub_model_exists!
             }
             array = SlimArray.new out
             array.find_options = find_args
@@ -130,18 +130,13 @@ module SlimApi
     end
 
     module InstanceMethods
-
+      INCLUDE_REGEXP = /^_/
+      VARIABLE_REGEXP = /^@_/
       def initialize args = {}
         #set attributes to empty array!
         @attributes = {}
 
-        input_args = args.symbolize_keys
-
-        if input_args.is_a?(Hash)
-          input_args.each do |key, value|
-            send("#{key}=", value)
-          end
-        end
+        _update_attributes args
 
         return self
       end
@@ -149,6 +144,22 @@ module SlimApi
       #persisted part
       def exists!
         @exists = true
+        self
+      end
+
+      #persisted part for all sub models
+      def sub_model_exists!
+        @exists = true
+        self.instance_variables.each do |arg|
+          if arg.to_s =~ VARIABLE_REGEXP
+            obj = self.instance_variable_get(arg)
+            if obj.is_a?(Array)
+              obj.each{|o| o.sub_model_exists! }
+            else
+              obj.sub_model_exists!
+            end
+          end
+        end
         self
       end
 
@@ -173,7 +184,7 @@ module SlimApi
           if response[:status] == "ok"
             exists!
             if response[self.class::NAME].is_a?(Hash)
-              self.id = response[self.class::NAME][:id]
+              _update_attributes response[self.class::NAME]
             end
             true
           elsif response[:error_type] == "ApiError::BadRequest"
@@ -192,7 +203,7 @@ module SlimApi
       def update
         response = self.class.request(:put, @attributes)
         if response[:status] == "ok"
-          self.id = response[self.class::NAME][:id]
+          _update_attributes response[self.class::NAME]
           true
         elsif response[:error_type] == "ApiError::BadRequest"
           if response[self.class::NAME] && response[self.class::NAME][:_errors]
@@ -221,7 +232,7 @@ module SlimApi
       end
 
       def update_attributes args = {}
-        self.merge!{args.symbolize_keys}
+        _update_attributes args
         update
       end
 
@@ -231,6 +242,35 @@ module SlimApi
 
       def to_hash
         @attributes
+      end
+
+      def _update_attributes args = {}
+        if args.is_a?(Hash)
+          input_args = args.symbolize_keys
+          input_args.each do |key, value|
+            #all keys starting '_' as '_client' are included models
+            if key.to_s =~ INCLUDE_REGEXP && key.to_s != "_errors"
+              sub_klass = "SlimApi::#{key.to_s.gsub(INCLUDE_REGEXP, "").singularize.camelize}".constantize
+              #array of objects
+              if value.is_a?(Array)
+                out = value.collect{ |arg|
+                  sub_klass.new(arg.symbolize_keys)
+                }
+                array = SlimArray.new out
+                array.find_options = {}
+                array.total_count = value.size
+                array.limit = value.size
+                array.offset = 0
+                array.find_object = sub_klass
+                instance_variable_set("@#{key}", array)
+              else
+                instance_variable_set("@#{key}", sub_klass.new(value))
+              end
+            else
+              send("#{key}=", value)
+            end
+          end
+        end
       end
 
       #BACKWARDS COMPATIBILITY FOR USING AS HASH!

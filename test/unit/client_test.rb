@@ -1,10 +1,10 @@
 # -*- encoding : utf-8 -*-
 require './test/test_helper'
-class ClientTest < Test::Unit::TestCase    
+class ClientTest < Test::Unit::TestCase
 
   context "Client" do
 
-    setup do 
+    setup do
       #destroy clients!
       SlimApi::Client.find(:ico => "1234").each do |client|
         client.destroy!
@@ -67,12 +67,12 @@ class ClientTest < Test::Unit::TestCase
         assert SlimApi::Client.query.is_a?(SlimApi::SlimQuery)
       end
 
-      should "Using a Primary Key" do 
+      should "Using a Primary Key" do
         assert_not_nil SlimApi::Client.find(@client.id), "Should not be nil"
         assert SlimApi::Client.find(@client.id).is_a?(SlimApi::Client), "Should be client"
       end
 
-      should "return nil / Raise exception on not found" do 
+      should "return nil / Raise exception on not found" do
         SlimApi.not_found_handling = :nil
         assert SlimApi::Client.find(123456789021232).nil?, "Shoud be nil on nonexisting!"
 
@@ -147,6 +147,35 @@ class ClientTest < Test::Unit::TestCase
         assert clients.is_a?(SlimApi::SlimQuery), "Result should be slimapi query"
       end
 
+
+      context "nested objects" do
+        setup do
+          @category = SlimApi::Category.new(:category => "Test")
+          unless @category.save
+            @category = SlimApi::Category.find(:category => "Test").first
+          end
+          @user = SlimApi::User.new(:id => 121, :user => "Testing user")
+          @user.save
+
+          @contract = SlimApi::Contract.new(:category_id => @category.id, :admin_id => 121, :client_id => @client.id, :product => "test", :landing_page => "http://test.cz")
+          @contract.save
+        end
+
+        should "have nested contracts" do
+          clients = SlimApi::Client.where(:id => @client.id).includes(:contracts)
+          assert_equal clients.size, 1, "Should return 1 client"
+          client = clients.first
+          pp client
+          assert_not_nil client.instance_variable_get("@_contracts")
+
+          assert client.instance_variable_get("@_contracts").is_a?(SlimApi::SlimArray), "Contracts should have SimApi array"
+
+          assert_equal client.instance_variable_get("@_contracts").size, 1, "Should have one contract"
+          assert client.instance_variable_get("@_contracts").first.is_a?(SlimApi::Contract), "Should be contract"
+
+          assert_not_nil client.contracts.first.id
+        end
+      end
     end
 
   end

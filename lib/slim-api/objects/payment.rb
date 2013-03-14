@@ -2,18 +2,18 @@
 
 module SlimApi
   class Payment
-    
+
     include SlimObject
 
     NAME = :payment
     PRIMARY_KEY = :id
 
     def contract
-      @contract ||= Contract.find(self[:campaign_id])
+      @_contract ||= Contract.find(self[:campaign_id])
     end
 
     def campaign
-      @campaign ||= Campagin.find(self[:campaign_id])
+      @_campaign ||= Campagin.find(self[:campaign_id])
     end
   end
 end

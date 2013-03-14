@@ -2,27 +2,27 @@
 
 module SlimApi
   class Campaign
-    
+
     include SlimObject
 
     NAME = :campaign
     PRIMARY_KEY = :id
 
     def client
-      if @client
-        @client
+      if @_client
+        @_client
       elsif client = Client.get(self[:client_id])
-        @client = client
+        @_client = client
       else
         nil
       end
     end
 
     def contract
-      if @contract
-        @contract
+      if @_contract
+        @_contract
       elsif contract = Contract.get(self[:id])
-        @contract = contract
+        @_contract = contract
       else
         nil
       end

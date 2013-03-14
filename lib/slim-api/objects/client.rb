@@ -2,18 +2,18 @@
 
 module SlimApi
   class Client
-    
+
     include SlimObject
 
     NAME = :client
     PRIMARY_KEY = :id
 
     def contracts
-      @contracts ||= Contract.where(client_id: self[:id])
+      @_contracts ||= Contract.where(client_id: self[:id])
     end
 
     def campaigns
-      @campaigns ||= Campagin.where(client_id: self[:id])
+      @_campaigns ||= Campagin.where(client_id: self[:id])
     end
 
     def self.find_by_access_hash access_hash
