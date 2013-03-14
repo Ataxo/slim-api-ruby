@@ -1,5 +1,10 @@
 # -*- encoding : utf-8 -*-
 
+#FIX inflections!
+ActiveSupport::Inflector.inflections do |inflect|
+  inflect.uncountable "statistics"
+end
+
 module SlimApi
   module SlimRelations
 
