@@ -15,7 +15,7 @@ module SlimApi
       klass_name = "#{name}".singularize.camelize
       self.class_eval <<DEF
         def #{name}
-          if !!#{loaded_variable_name}
+          if #{name}_loaded?
             #{variable_name}
           elsif #{local_variable_name} = #{klass_name}.find(self[:#{foreign_key}])
             #{loaded_variable_name} = true
@@ -24,6 +24,14 @@ module SlimApi
             #{loaded_variable_name} = true
             nil
           end
+        end
+
+        def #{name}_loaded?
+          !!#{loaded_variable_name}
+        end
+
+        def #{name}_empty?
+          !#{name}_loaded? || #{variable_name}.nil?
         end
 DEF
     end
@@ -34,12 +42,20 @@ DEF
       klass_name = "#{name}".singularize.camelize
       self.class_eval <<DEF
         def #{name}
-          if !!#{loaded_variable_name}
+          if #{name}_loaded?
             #{variable_name}
           else
             #{loaded_variable_name} = true
             #{variable_name} = #{klass_name}.where(#{foreign_key}: self[self.class::PRIMARY_KEY])
           end
+        end
+
+        def #{name}_loaded?
+          !!#{loaded_variable_name}
+        end
+
+        def #{name}_empty?
+          !#{name}_loaded? || #{variable_name}.nil?
         end
 
         def #{name}_reload
