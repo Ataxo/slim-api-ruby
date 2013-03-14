@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "slim-api-ruby"
-  s.version = "0.1.1"
+  s.version = "0.1.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Ondrej Bartas"]
-  s.date = "2013-03-12"
+  s.date = "2013-03-14"
   s.description = "Wrapper over REST api of Ataxo - enables you to find, create, update and destroy objects"
   s.email = "ondrej@bartas.cz"
   s.extra_rdoc_files = [
