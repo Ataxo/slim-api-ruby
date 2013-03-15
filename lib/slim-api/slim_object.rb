@@ -125,7 +125,7 @@ module SlimApi
 
         curl.http (verb == :find ? :get : verb).to_s.upcase
         response = Yajl::Parser.parse(curl.body_str, symbolize_keys: true)
-        SlimApi.log(header: curl.headers, verb: (verb == :find ? :get : verb), url: curl.url, response: curl.body_str)
+        SlimApi.log(header: curl.headers, verb: (verb == :find ? :get : verb), url: curl.url, response: curl.body_str, response_hash: response)
         response
       end
 

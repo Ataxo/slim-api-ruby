@@ -11,9 +11,13 @@ module SlimApi
     # :nil  - return only nil when not found
     # :exception - return NotFoundException
     not_found_handling: :nil,
+
+    #logger
+    logger_level: :info,
     #webmock
-    webmock: false
+    webmock: false,
   }
+
   @find_options = {
     limit: 10,
     offset: 0
@@ -22,6 +26,7 @@ module SlimApi
   @logger = nil
 
   def self.logger= logger
+    logger.level = Logger.const_get(@config[:logger_level].to_s.upcase)
     @logger = logger
   end
 
@@ -42,7 +47,22 @@ module SlimApi
       if @config[:webmock]
         @logger.info "stub_request(:#{request[:verb]}, '#{request[:url]}').with(:headers => #{request[:header]}).to_return(:status => 200, :body => %Q{#{request[:response]}}, :headers => {})"
       else
-        @logger.info "#{"-"*80}\nHeader: #{request[:header]}\nRequest: #{request[:verb]}\nURL: #{request[:url]}\n#{request[:response]}"
+        @logger.debug "#{"-"*80}\nHeader: #{request[:header]}\nRequest: #{request[:verb]}\nURL: #{request[:url]}\n#{request[:response]}"
+        verb = "#{request[:verb].to_s.upcase}"
+
+        message = "SlimAPi:".cyan + " " + verb.yellow + " "*(8-verb.size)
+        if request[:response_hash][:status] == "error"
+          executed = "ERROR"
+          message += executed.red + " "*(8-executed.size)
+          message +=  "#{request[:url]}" + " "
+          message +=  request[:response_hash][:message].red
+        else
+          executed = "#{request[:response_hash][:executed_in].gsub("s","").to_f.round(3)}s"
+          message += executed.green + " "*(8-executed.size)
+          message +=  "#{request[:url]}" + " "
+        end
+
+        @logger.info message
       end
     end
   end
