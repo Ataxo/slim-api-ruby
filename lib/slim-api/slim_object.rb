@@ -14,6 +14,11 @@ module SlimApi
         #relations has_many, belongs_to
         extend SlimApi::SlimRelations
 
+        #New Relic integration
+        if defined? ::NewRelic::Agent::MethodTracer
+          extend ::NewRelic::Agent::MethodTracer
+        end
+
         extend ClassMethods
         include InstanceMethods
       end
@@ -127,6 +132,10 @@ module SlimApi
         response = Yajl::Parser.parse(curl.body_str, symbolize_keys: true)
         SlimApi.log(header: curl.headers, verb: (verb == :find ? :get : verb), url: curl.url, response: curl.body_str, response_hash: response)
         response
+      end
+
+      if defined? ::NewRelic::Agent::MethodTracer
+        add_method_tracer :request, 'Custom/SlimApi'
       end
 
     end
