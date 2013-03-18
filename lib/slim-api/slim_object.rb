@@ -14,17 +14,16 @@ module SlimApi
         #relations has_many, belongs_to
         extend SlimApi::SlimRelations
 
-        #New Relic integration
-        if defined? ::NewRelic::Agent::MethodTracer
-          include ::NewRelic::Agent::MethodTracer
-        end
-
         extend ClassMethods
         include InstanceMethods
       end
     end
 
     module ClassMethods
+
+      if defined? ::NewRelic::Agent::MethodTracer
+        include ::NewRelic::Agent::MethodTracer
+      end
 
       delegate :order, :limit, :offset,
              :where, :includes, :to => :query
