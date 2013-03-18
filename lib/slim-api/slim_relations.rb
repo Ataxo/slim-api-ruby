@@ -33,6 +33,12 @@ module SlimApi
         def #{name}_empty?
           !#{name}_loaded? || #{variable_name}.nil?
         end
+
+        def #{name}_load item
+          #{loaded_variable_name} = true
+          #{variable_name} = item
+        end
+        alias #{name}_load= #{name}_load
 DEF
     end
 
@@ -62,6 +68,13 @@ DEF
           #{loaded_variable_name} = false
           #{variable_name} = nil
         end
+
+        def #{name}_load items
+          #{loaded_variable_name} = true
+          #{variable_name} = items
+        end
+        alias #{name}_load= #{name}_load
+
 DEF
     end
 
