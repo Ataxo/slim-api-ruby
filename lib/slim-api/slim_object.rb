@@ -16,7 +16,7 @@ module SlimApi
 
         #New Relic integration
         if defined? ::NewRelic::Agent::MethodTracer
-          extend ::NewRelic::Agent::MethodTracer
+          include ::NewRelic::Agent::MethodTracer
         end
 
         extend ClassMethods
