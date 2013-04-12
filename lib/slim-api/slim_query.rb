@@ -3,11 +3,11 @@
 module SlimApi
   class SlimQuery
 
-    attr_accessor :klass, :loaded, 
-      :where_values, :includes_values, :order_values,
+    attr_accessor :klass, :loaded,
+      :where_values, :includes_values, :order_values, :group_values,
       :offset_value, :limit_value
 
-    MULTI_VALUE_METHODS = [:where, :includes, :order]
+    MULTI_VALUE_METHODS = [:where, :includes, :order, :group]
     SINGLE_VALUE_METHODS = [:limit, :offset]
 
     #initialize empty query
@@ -42,7 +42,7 @@ module SlimApi
       query.includes_values += build_array_options(opts)
       query
     end
-    
+
     # method for offset set
     def offset(opts)
       return self if opts.blank?
@@ -67,6 +67,15 @@ module SlimApi
 
       query = clone
       query.order_values += build_array_options(opts)
+      query
+    end
+
+    # method for order set
+    def group(opts)
+      return self if opts.blank?
+
+      query = clone
+      query.group_values += build_array_options(opts)
       query
     end
 
@@ -113,7 +122,7 @@ module SlimApi
     def prepare_query_for_request
       out = {}
       # set parameters (limit, offset)
-      SINGLE_VALUE_METHODS.each do |v| 
+      SINGLE_VALUE_METHODS.each do |v|
         val = instance_variable_get(:"@#{v}_value")
         out[v] = val if val
       end
@@ -133,6 +142,11 @@ module SlimApi
       # orders
       if @order_values.size > 0
         out[:order] = @order_values.join(",")
+      end
+
+      # groups
+      if @group_values.size > 0
+        out[:group] = @group_values.join(",")
       end
 
       #return builded hash
@@ -217,12 +231,12 @@ module SlimApi
 
 
     #If you call any of other methods (for enumerable) - delegate it to loaded_array!
-    def method_missing(method, *args, &block)    
+    def method_missing(method, *args, &block)
       if loaded_array.respond_to?(method)
         loaded_array.send(method, *args, &block)
       else
-        raise NoMethodError  
-      end    
+        raise NoMethodError
+      end
     end
 
   end
