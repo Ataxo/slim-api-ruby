@@ -6,8 +6,8 @@ source "http://rubygems.org"
 gem "curb"
 gem "yajl-ruby"
 gem "hashr"
-gem "activesupport"
-gem "activemodel"
+gem "activesupport", "~> 4.0.0.rc1"
+gem "activemodel", "~> 4.0.0.rc1"
 gem "colorize"
 
 # Add dependencies to develop your gem here.
